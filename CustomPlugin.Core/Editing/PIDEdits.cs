@@ -8,6 +8,23 @@ namespace CustomPlugin.Core.Editing
     {
         public static List<int> UnownForm { get; set; } = new List<int>();
 
+        public static void Gen678Shiny(this PKM pkm, Shiny type)
+        {
+            pkm.SetPIDGender(pkm.Gender);
+            CommonEdits.SetShiny(pkm, type);
+            pkm.SetRandomEC();
+        }
+
+        public static void Gen345Shiny(this PKM pkm, Shiny type)
+        {
+            
+        }
+
+        public static void Gen12Shiny(this PKM pkm)
+        {
+            pkm.SetShiny();
+        }
+
         public static void Gen678UnShiny(this PKM pkm)
         { 
             pkm.SetShiny();
