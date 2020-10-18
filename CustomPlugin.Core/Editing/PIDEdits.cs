@@ -49,6 +49,10 @@ namespace CustomPlugin.Core.Editing
             if (pkm.Format == 5)
                 pkm.Gen3UnShiny();
 
+            var newPID = pkm.PID;
+            pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, pkm.PID));
+            pkm.RefreshAbility(pkm.PIDAbility);
+            pkm.PID = newPID;
         }
 
         public static void Gen3UnShiny(this PKM pkm)
@@ -68,12 +72,12 @@ namespace CustomPlugin.Core.Editing
 
         public static void Gen4UnShiny(this PKM pkm)
         {
-            // SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
+            SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
         }
 
         public static void Gen5UnShiny(this PKM pkm)
         {
-
+            SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
         }
 
         /// <summary>
@@ -99,15 +103,15 @@ namespace CustomPlugin.Core.Editing
             IEnumerable<uint> seeds;
             do
             {
-                var half = GetHalfPID();
+                var pid = Util.Rand32();
+                var half = GetHalfPID(pid);
                 seeds = MethodFinder.GetSeedsFromPIDEuclid(method, half[0], half[1]);
             } while (seeds.Count() == 0);
             PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
         }
 
-        public static uint[] GetHalfPID()
+        public static uint[] GetHalfPID(uint pid)
         {
-            var pid = Util.Rand32();
             var top = pid >> 16;
             var bot = pid & 0xFFFF;
             return new uint[] { top, bot };
