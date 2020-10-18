@@ -42,10 +42,10 @@ namespace PKHeXCustomPlugin.Plugins
         private void AutoSetRandPID(object sender, EventArgs e)
         {
             var flag = ((ToolStripMenuItem)sender).Name;
-            var curBox = (Control.ModifierKeys & Keys.Control) == Keys.Control;
-            if (curBox)
+            var current = (Control.ModifierKeys & Keys.Control) == Keys.Control;
+            if (current)
             {
-                RandPIDCurrentBox(flag);
+                RandPIDCurrent(flag);
                 return;
             }
             
@@ -53,7 +53,7 @@ namespace PKHeXCustomPlugin.Plugins
             if (all)
                 RandPIDAllBoxes(flag);
             else
-                RandPIDCurrent(flag);
+                RandPIDCurrentBox(flag);
         }
 
         private void RandPIDCurrentBox(string flag)
