@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+		<OutputType>Library</OutputType>
+		<LangVersion>8</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\json\limited\json_pokemon_AS.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_B.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_B2.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_D.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_E.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_FR.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_GE.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_GP.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_HG.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_LG.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_MN.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_OR.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_P.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_Pt.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_R.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_S.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_SH.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_SN.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_SS.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_SW.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_UM.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_US.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_W.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_W2.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_X.json" />
+	  <None Remove="Resources\json\limited\json_pokemon_Y.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_AS.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_B.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_B2.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_D.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_E.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_FR.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_GE.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_GP.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_HG.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_LG.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_MN.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_OR.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_P.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_Pt.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_R.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_S.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_SH.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_SN.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_SS.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_SW.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_UM.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_US.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_W.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_W2.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_X.json" />
+	  <EmbeddedResource Include="Resources\json\limited\json_pokemon_Y.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="PKHeX.Core" Version="20.10.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.Windows.Forms">
+	    <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.Windows.Forms.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\text\" />
+	</ItemGroup>
+
+</Project>

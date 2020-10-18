@@ -1,0 +1,9 @@
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.AssemblyInfoInputs.cache
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.AssemblyInfo.cs
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.csproj.CoreCompileInputs.cache
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\bin\Debug\net46\CustomPlugin.Core.dll
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\bin\Debug\net46\CustomPlugin.Core.pdb
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\bin\Debug\net46\PKHeX.Core.dll
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.csproj.CopyComplete
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.dll
+D:\Pokemon\PKHeXCustomPlugin\PKHeXCustomPlugin\CustomPlugin.Core\obj\Debug\net46\CustomPlugin.Core.pdb

@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZpDaUs1j13a+1jTrhwFx+Gm2vWx9oA9qmVLk4bL8FdU1xyDlv9DVubLcVPT7eIEVqM43SYui3utDfFtpGc1zEg==",
+  "success": true,
+  "projectFilePath": "D:\\Pokemon\\PKHeX_Custom_Plugin\\CustomPlugin.Core\\CustomPlugin.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\pkhex.core\\20.10.10\\pkhex.core.20.10.10.nupkg.sha512"
+  ],
+  "logs": []
+}
