@@ -45,7 +45,7 @@ namespace CustomPlugin.Core.Logic
             for (int i = 0; i < data.Count; i++)
             {
                 var pkm = data[i];
-                if (pkm == null || pkm.Species <= 0 || pkm.IsEgg)
+                if (pkm == null || pkm.Species <= 0)
                     continue;
 
                 var result = pkm.SetRandomPID(sav.Version, flag);
