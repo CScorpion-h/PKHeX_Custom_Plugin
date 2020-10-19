@@ -16,7 +16,7 @@ namespace CustomPlugin.Core.Editing
 
             if (pkm.WasEvent ||        //Check FatefulEncounter
                  generation == 1 || Legal.NoHatchFromEgg.Contains(pkm.Species) ||   // NoHatch
-                 generation != gameVersion.GetGeneration())    // Not the same generation
+                 origin != generation)    // Not the same generation
                 return null;
             if (pkm.Species == 854 && pkm.AltForm == 1    // Antique Sinistea
                 || pkm.Species == 855 && pkm.AltForm == 1 // Antique Polteageist
