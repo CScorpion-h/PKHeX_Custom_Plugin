@@ -51,27 +51,33 @@ namespace CustomPlugin.Core.Editing
 
             var newPID = pkm.PID;
             pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, pkm.PID));
-            pkm.RefreshAbility(pkm.PIDAbility);
+            pkm.RefreshAbility(pkm.GenNumber == 3? 0 : pkm.PIDAbility);
             pkm.PID = newPID;
         }
 
         public static void Gen3UnShiny(this PKM pkm)
         {
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+
             if (pkm.Version == (int)GameVersion.CXD) {
-                SetPIDIV(pkm, RNG.XDRNG, PIDType.CXD);
-                return; 
+                rng = RNG.XDRNG;
+                type = PIDType.CXD;
             }
             if (pkm.Species == 201)
-            {
-                pkm.SetPIDUnown3(pkm.AltForm);
-                return;
-            }
-            SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
+                type = PIDType.Method_3_Unown;
+
+            SetPIDIV(pkm, rng, type);
 
         }
 
         public static void Gen4UnShiny(this PKM pkm)
         {
+            if (pkm.GenNumber == 3)
+            {
+                Gen3UnShiny(pkm);
+                return;
+            }
             SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
         }
 
@@ -101,10 +107,18 @@ namespace CustomPlugin.Core.Editing
         public static void SetPIDIV(PKM pkm, RNG method, PIDType type)
         {
             IEnumerable<uint> seeds;
+            uint pid;
+            uint[] half;
             do
             {
-                var pid = Util.Rand32();
-                var half = GetHalfPID(pid);
+                if (pkm.Species == 201)
+                {
+                    pkm.SetPIDUnown3(pkm.AltForm);
+                    pid = pkm.PID;
+                } else
+                    pid = Util.Rand32();
+
+                half = GetHalfPID(pid);
                 seeds = MethodFinder.GetSeedsFromPIDEuclid(method, half[0], half[1]);
             } while (seeds.Count() == 0);
             PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
