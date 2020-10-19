@@ -49,10 +49,7 @@ namespace CustomPlugin.Core.Editing
             if (pkm.Format == 5)
                 pkm.Gen3UnShiny();
 
-            var newPID = pkm.PID;
-            pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, pkm.PID));
-            pkm.RefreshAbility(pkm.GenNumber == 3? 0 : pkm.PIDAbility);
-            pkm.PID = newPID;
+            SetBasicData(pkm);
         }
 
         public static void Gen3UnShiny(this PKM pkm)
@@ -66,15 +63,19 @@ namespace CustomPlugin.Core.Editing
             }
             if (pkm.Species == 201)
                 type = PIDType.Method_3_Unown;
-
+            
             SetPIDIV(pkm, rng, type);
-
         }
 
         public static void Gen4UnShiny(this PKM pkm)
         {
             if (pkm.GenNumber == 3)
             {
+                if (pkm.Met_Location == 55 && pkm.Ball == 4)
+                {
+                    pkm.SetPIDGender(pkm.Gender);
+                    return;
+                }
                 Gen3UnShiny(pkm);
                 return;
             }
@@ -86,6 +87,23 @@ namespace CustomPlugin.Core.Editing
             SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
         }
 
+        internal static void SetBasicData(PKM pkm)
+        {
+            var newPID = pkm.PID;
+            var ability = pkm.GenNumber < 5 ? newPID & 0x0000_0001 : newPID & 0x0001_0000;
+            if (pkm.Format != pkm.GenNumber && pkm.GenNumber == 3)
+            {
+                PK3 pk3 = new PK3 { PID=newPID };
+                pk3.RefreshAbility(pk3.PIDAbility);
+                pkm.AbilityNumber = pk3.AbilityNumber;
+            } else
+            {
+                pkm.RefreshAbility((int)ability);
+            }
+            pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, newPID));
+            pkm.PID = newPID;
+        }
+            
         /// <summary>
         /// 说明：对1-2代的精灵进行非闪光处理（随机个体值）
         /// 细节：未知图腾形态与个体值相关|默认无需出现相同未知图腾
@@ -94,7 +112,7 @@ namespace CustomPlugin.Core.Editing
         public static void Gen12UnShiny(this PKM pkm)
         {
             pkm.SetRandomIVs();
-            if (pkm.Species == 201) //未知图腾
+            if (pkm.Species == 201) //Unown
             {
                 if (UnownForm.Count == 26)
                     UnownForm.Clear();
