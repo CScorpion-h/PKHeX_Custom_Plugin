@@ -1,4 +1,5 @@
 ﻿using PKHeX.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -79,7 +80,12 @@ namespace CustomPlugin.Core.Editing
                 Gen3UnShiny(pkm);
                 return;
             }
-            SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
+
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+            if (pkm.Met_Location == 233)
+                type = PIDType.Pokewalker;
+            SetPIDIV(pkm, rng, type);
         }
 
         public static void Gen5UnShiny(this PKM pkm)
