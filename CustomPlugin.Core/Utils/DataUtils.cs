@@ -13,19 +13,18 @@ namespace CustomPlugin.Core.Utils
         private static readonly string[] manifestResourceNames = thisAssembly.GetManifestResourceNames();
         private static readonly Dictionary<string, string> resourceNameMap = new Dictionary<string, string>();
 
-        // 防止多次读取资源文件
+        // Avoid reading resource files multiple times   
         public static readonly Dictionary<string, string> stringDictionaryCache = new Dictionary<string, string>();
-        // 资源文件内容转换成数据的线程锁
+        // Make sure only one thread can read the cache
         private static readonly object getStringDictLoadLock = new object();
 
         private static string? FileType { get; set; }
-        // 读取列表
+        
         public static string GetFileContent(string fileName, string type = "text") => GetFileContent($"{type}_{fileName}");
 
         public static string GetFileContent(string fileName)
         {
             string data;
-            // 判断是否读取过资源文件
             if (IsStringLoadCached(fileName, out var result))
                 return result;
             data = GetStringResource(fileName);
@@ -42,9 +41,6 @@ namespace CustomPlugin.Core.Utils
             return data;
         }
 
-        /**
-         * 获取资源文件并读取内容
-         */
         private static string? GetStringResource(string fileName)
         {
             FileType = fileName.Split('_')[0];
@@ -79,11 +75,6 @@ namespace CustomPlugin.Core.Utils
                 return stringDictionaryCache.TryGetValue(fileName, out result);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public static string GetGameVersionStrByKey(int key)
         {
             return Enum.GetName(typeof(GameVersion), key);

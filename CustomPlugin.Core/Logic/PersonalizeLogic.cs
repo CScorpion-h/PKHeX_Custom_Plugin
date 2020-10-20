@@ -46,7 +46,7 @@ namespace CustomPlugin.Core.Logic
         }
 
         /// <summary>
-        /// Personalize all <see cref="PKM"/> in the <see cref="data"/>
+        /// Personalize all <see cref="PKM"/> in the <see cref="data"/>.
         /// </summary>
         /// <param name="sav">Save File to personalize</param>
         /// <param name="data">Data to personalize</param>

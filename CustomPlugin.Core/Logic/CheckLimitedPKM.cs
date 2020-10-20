@@ -20,20 +20,18 @@ namespace CustomPlugin.Core.Logic
         public const BindingFlags InstanceBindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
         /// <summary>
-        /// 
+        /// Check for Game-exclusive Pokemon
         /// </summary>
-        /// <param name="pkm"></param>
-        /// <param name="gameVersion"></param>
-        /// <returns></returns>
+        /// <param name="pkm">Pokemon to be checked</param>
+        /// <param name="gameVersion">Current game version</param>
+        /// <returns>Whether it is the result of Game-exclusive Pokemon.</returns>
         public static bool IsRealLimited(PKM pkm, int gameVersion)
         {
             bool isHatch = false;
-            // 是否为版本限定宝可梦
             bool isLimitedPkm = IsLimitedPkm(pkm.Version, pkm.Species, gameVersion);
-            // 判断是哪个区间的版本
-            bool temp = ArrayUtils.IsEleInArray(Instance.GetHatchZeroArr(), CurrentPkmVer);
+            bool temp = ArrayUtils.IsEleInArray(Instance.GetHatchZeroArr(), CurrentPkmVer);// Check for Egg-Hatch pokemon
             if (temp)
-                // 前四代需要查看宝可梦相遇等级是否为0，如果等级为0说明可以直接修改初训家
+                /// Before Gen4, need to check whether met_level is 0
                 isHatch = pkm.Met_Level == 0 ? false : true;
             else
                 isHatch = pkm.Met_Level == 1 ? false : true;
@@ -41,11 +39,11 @@ namespace CustomPlugin.Core.Logic
         }
 
         /// <summary>
-        /// 
+        /// Check if the current pokemon can be captured in the both versions.
         /// </summary>
-        /// <param name="version"></param>
-        /// <param name="species"></param>
-        /// <param name="gameVersion"></param>
+        /// <param name="version">Pokemon original version</param>
+        /// <param name="species">Pokemon species</param>
+        /// <param name="gameVersion">Current game version</param>
         /// <returns></returns>
         private static bool IsLimitedPkm(int version, int species, int gameVersion)
         {
