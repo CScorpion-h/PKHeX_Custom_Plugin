@@ -48,3 +48,4 @@ PKHeXCustomPlugin/obj/Debug/PKHeXCustomPlugin.csprojAssemblyReference.cache
 PKHeXCustomPlugin/obj/PKHeXCustomPlugin.csproj.nuget.dgspec.json
 PKHeXCustomPlugin/obj/project.assets.json
 PKHeXCustomPlugin/obj/project.nuget.cache
+*.testlog
