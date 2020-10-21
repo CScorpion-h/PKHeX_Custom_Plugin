@@ -3,6 +3,7 @@ using PKHeX.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace CustomPlugin.Core.Editing
@@ -20,7 +21,99 @@ namespace CustomPlugin.Core.Editing
 
         public static void Gen345Shiny(this PKM pkm, Shiny type)
         {
-            
+            bool flag = pkm.IsEgg || pkm.WasEgg || pkm.Met_Level <= 1;
+            if (flag)
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                CommonEdits.SetShiny(pkm, type);
+                return;
+            }
+
+            if (pkm.Format == 3)
+                pkm.Gen3Shiny(type);
+           if (pkm.Format == 4)
+                pkm.Gen4Shiny(type);
+            if (pkm.Format == 5)
+                pkm.Gen5Shiny(type);
+
+            SetBasicData(pkm);
+        }
+
+        public static void Gen5Shiny(this PKM pkm, Shiny shinyType)
+        {
+            if (pkm.GenNumber == 3)
+            {
+                if (pkm.Met_Location == Locations.Transfer4 && pkm.Ball == 4)
+                {
+                    pkm.SetPIDGender(pkm.Gender);
+                    CommonEdits.SetShiny(pkm, shinyType);
+                    return;
+                }
+                Gen3UnShiny(pkm);
+                return;
+            }
+
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+            IEnumerable<uint> seeds = null;
+            do
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                CommonEdits.SetShiny(pkm, shinyType);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (!pkm.IsShiny || seeds == null);
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
+
+        }
+
+        public static void Gen4Shiny(this PKM pkm, Shiny shinyType)
+        {
+            if (pkm.GenNumber == 3)
+            {
+                if (pkm.Met_Location == 55 && pkm.Ball == 4)
+                {
+                    pkm.SetPIDGender(pkm.Gender);
+                    CommonEdits.SetShiny(pkm, shinyType);
+                    return;
+                }
+                Gen3Shiny(pkm, shinyType);
+                return;
+            }
+
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+            if (pkm.Met_Location == 233)
+                type = PIDType.Pokewalker;
+
+            IEnumerable<uint> seeds;
+            do
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                CommonEdits.SetShiny(pkm, shinyType);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (!pkm.IsShiny || seeds == null);
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
+        }
+
+        public static void Gen3Shiny(this PKM pkm, Shiny shinyType)
+        {
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+
+            if (pkm.Species == 201)
+                type = PIDType.Method_1_Unown;
+
+            IEnumerable<uint> seeds;
+            do
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                CommonEdits.SetShiny(pkm, shinyType);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (!pkm.IsShiny || seeds == null);
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
         }
 
         public static void Gen12Shiny(this PKM pkm)
@@ -64,10 +157,18 @@ namespace CustomPlugin.Core.Editing
                 rng = RNG.XDRNG;
                 type = PIDType.CXD;
             }
+
+            IEnumerable<uint> seeds;
+            do
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (pkm.IsShiny || seeds == null);
+
             if (pkm.Species == 201)
-                type = PIDType.Method_3_Unown;
-            
-            SetPIDIV(pkm, rng, type);
+                type = PIDType.Method_1_Unown;
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
         }
 
         public static void Gen4UnShiny(this PKM pkm)
@@ -87,7 +188,15 @@ namespace CustomPlugin.Core.Editing
             PIDType type = PIDType.Method_1;
             if (pkm.Met_Location == 233)
                 type = PIDType.Pokewalker;
-            SetPIDIV(pkm, rng, type);
+            
+            IEnumerable<uint> seeds;
+            do
+            {
+                pkm.SetPIDGender(pkm.Gender);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (pkm.IsShiny || seeds == null);
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
         }
 
         public static void Gen5UnShiny(this PKM pkm)
@@ -103,16 +212,17 @@ namespace CustomPlugin.Core.Editing
                 Gen3UnShiny(pkm);
                 return;
             }
-            if (generation == 5)
+
+            RNG rng = RNG.LCRNG;
+            PIDType type = PIDType.Method_1;
+            IEnumerable<uint> seeds = null;
+            do
             {
-                do
-                {
-                    SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
-                }
-                while (IsGen5PIDMisMatch(pkm));
-                return;
-            }
-            SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
+                pkm.SetPIDGender(pkm.Gender);
+                seeds = GetSeedsFromPID(pkm.PID, rng);
+            } while (pkm.IsShiny || seeds == null);
+
+            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
         }
 
         internal static void SetBasicData(PKM pkm)
@@ -120,18 +230,17 @@ namespace CustomPlugin.Core.Editing
             var newPID = pkm.PID;
             var ability = pkm.GenNumber < 5 ? (int)(newPID & 1) : (int)(newPID >> 16) & 1;
             pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, newPID));
-            if (pxkm.GenNumber < 5)
+            if (pkm.GenNumber < 5)
                 pkm.SetNature((int)(newPID % 25));
             switch (pkm.GenNumber)
             {
                 case 3:
                     var pk3 = new PK3 { PID = newPID, Species = pkm.Species };
-                    var pi = (PersonalInfoG3)pk3.PersonalInfo;
-                    var abilities = pkm.PersonalInfo.Abilities;
-                    if (!pi.HasSecondAbility)
-                        pkm.SetAbility(pi.Ability1);
+                    var pi3 = (PersonalInfoG3)pk3.PersonalInfo;
+                    if (!pi3.HasSecondAbility)
+                        pkm.SetAbility(pi3.Ability1);
                     else
-                        pkm.SetAbility(pkm.PersonalInfo.Abilities[ability]);
+                        pkm.SetAbility(pi3.Abilities[ability]);
                     break;
                 default:
                     pkm.RefreshAbility(ability);
@@ -158,31 +267,19 @@ namespace CustomPlugin.Core.Editing
             }
         }
 
-        public static void SetPIDIV(PKM pkm, RNG method, PIDType type)
+        internal static void SetUnownForm(PKM pkm)
         {
-            IEnumerable<uint> seeds;
-            uint pid;
-            uint[] half;
-            do
-            {
-                if (pkm.Species == 201)
-                {
-                    pkm.SetPIDUnown3(pkm.AltForm);
-                    pid = pkm.PID;
-                } else
-                    pid = Util.Rand32(new Random());
-                half = GetHalfPID(pid);
-                seeds = MethodFinder.GetSeedsFromPIDEuclid(method, half[0], half[1]);
-            } while (seeds.Count() == 0);
-            PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
+            
         }
 
-        private static bool IsGen5PIDMisMatch(PKM pkm)
+        internal static IEnumerable<uint>? GetSeedsFromPID(uint pid, RNG rng)
         {
-            var result = (pkm.PID & 1) ^ (pkm.PID >> 31) ^ (pkm.TID & 1) ^ (pkm.SID & 1);
-            if (result != 0)
-                return true;
-            return false;
+
+            var half = GetHalfPID(pid);
+            var seeds = MethodFinder.GetSeedsFromPIDEuclid(rng, half[0], half[1]);
+            if (seeds.Count() == 0)
+                return null;
+            return seeds;
         }
 
         public static uint[] GetHalfPID(uint pid)

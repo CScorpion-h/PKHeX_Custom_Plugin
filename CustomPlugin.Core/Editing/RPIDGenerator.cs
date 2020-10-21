@@ -5,7 +5,7 @@ namespace CustomPlugin.Core.Editing
 {
     internal static class RPIDGenerator
     {
-        private static string[] flags = { "UnShiny", "StarShiny", "SquareShiny" };
+        private static readonly string[] flags = { "UnShiny", "StarShiny", "SquareShiny" };
 
         public static PKM SetRandomPID(this PKM pkm, GameVersion gameVersion, string flag)
         {
