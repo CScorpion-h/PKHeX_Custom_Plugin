@@ -1,7 +1,9 @@
-﻿using PKHeX.Core;
+﻿using CustomPlugin.Core.Legality;
+using PKHeX.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace CustomPlugin.Core.Editing
 {
@@ -48,7 +50,7 @@ namespace CustomPlugin.Core.Editing
             if (pkm.Format == 4)
                 pkm.Gen4UnShiny();
             if (pkm.Format == 5)
-                pkm.Gen3UnShiny();
+                pkm.Gen5UnShiny();
 
             SetBasicData(pkm);
         }
@@ -90,23 +92,51 @@ namespace CustomPlugin.Core.Editing
 
         public static void Gen5UnShiny(this PKM pkm)
         {
+            var generation = pkm.GenNumber;
+            if (generation == 3)
+            {
+                if (pkm.Met_Location == Locations.Transfer4 && pkm.Ball == 4)
+                {
+                    pkm.SetPIDGender(pkm.Gender);
+                    return;
+                }
+                Gen3UnShiny(pkm);
+                return;
+            }
+            if (generation == 5)
+            {
+                do
+                {
+                    SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
+                }
+                while (IsGen5PIDMisMatch(pkm));
+                return;
+            }
             SetPIDIV(pkm, RNG.LCRNG, PIDType.Method_1);
         }
 
         internal static void SetBasicData(PKM pkm)
         {
             var newPID = pkm.PID;
-            var ability = pkm.GenNumber < 5 ? newPID & 0x0000_0001 : newPID & 0x0001_0000;
-            if (pkm.Format != pkm.GenNumber && pkm.GenNumber == 3)
-            {
-                PK3 pk3 = new PK3 { PID=newPID };
-                pk3.RefreshAbility(pk3.PIDAbility);
-                pkm.AbilityNumber = pk3.AbilityNumber;
-            } else
-            {
-                pkm.RefreshAbility((int)ability);
-            }
+            var ability = pkm.GenNumber < 5 ? (int)(newPID & 1) : (int)(newPID >> 16) & 1;
             pkm.SetGender(PKX.GetGenderFromPID(pkm.Species, newPID));
+            if (pxkm.GenNumber < 5)
+                pkm.SetNature((int)(newPID % 25));
+            switch (pkm.GenNumber)
+            {
+                case 3:
+                    var pk3 = new PK3 { PID = newPID, Species = pkm.Species };
+                    var pi = (PersonalInfoG3)pk3.PersonalInfo;
+                    var abilities = pkm.PersonalInfo.Abilities;
+                    if (!pi.HasSecondAbility)
+                        pkm.SetAbility(pi.Ability1);
+                    else
+                        pkm.SetAbility(pkm.PersonalInfo.Abilities[ability]);
+                    break;
+                default:
+                    pkm.RefreshAbility(ability);
+                    break;
+            }
             pkm.PID = newPID;
         }
             
@@ -140,12 +170,19 @@ namespace CustomPlugin.Core.Editing
                     pkm.SetPIDUnown3(pkm.AltForm);
                     pid = pkm.PID;
                 } else
-                    pid = Util.Rand32();
-
+                    pid = Util.Rand32(new Random());
                 half = GetHalfPID(pid);
                 seeds = MethodFinder.GetSeedsFromPIDEuclid(method, half[0], half[1]);
             } while (seeds.Count() == 0);
             PIDGenerator.SetValuesFromSeed(pkm, type, seeds.ElementAt(0));
+        }
+
+        private static bool IsGen5PIDMisMatch(PKM pkm)
+        {
+            var result = (pkm.PID & 1) ^ (pkm.PID >> 31) ^ (pkm.TID & 1) ^ (pkm.SID & 1);
+            if (result != 0)
+                return true;
+            return false;
         }
 
         public static uint[] GetHalfPID(uint pid)
